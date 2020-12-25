@@ -9,6 +9,31 @@
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Inline JSON Object validator</description>
+    <url>http://github.com/isaacribeiro/inline-json-validator</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Isaac Ribeiro</name>
+            <email>ribeiro.isaac@hotmail.com</email>
+            <url>https://isaacribeiro.dev</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/isaacribeiro/inline-json-validator.git</connection>
+        <developerConnection>scm:git:ssh://github.com:isaacribeiro/inline-json-validator.git</developerConnection>
+        <url>http://github.com/isaacribeiro/inline-json-validator/tree/master</url>
+    </scm>
+
     <properties>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <junit.version>5.7.0</junit.version>
