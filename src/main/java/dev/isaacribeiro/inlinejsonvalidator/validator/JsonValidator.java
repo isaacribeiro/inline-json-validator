@@ -1,11 +1,11 @@
 package dev.isaacribeiro.inlinejsonvalidator.validator;
 
 import dev.isaacribeiro.inlinejsonvalidator.annotation.Json;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class JsonValidator implements ConstraintValidator<Json, String> {
 

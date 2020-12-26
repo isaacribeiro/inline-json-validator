@@ -27,10 +27,9 @@ public class SimpleIntegrationTest {
   public void shouldRaiseAViolationWhenPropertyIsAnnotatedButItsValueIsNotAJsonObject() {
     // Given & When
     Set<String> expectedViolationMessagesD = new HashSet();
-    expectedViolationMessagesD.add("File content must be a valid JSON object.");
+    expectedViolationMessagesD.add("Input string must be a JSON object.");
 
     BaseEntity actualEntity = new BaseEntity();
-    actualEntity.setInputJson("");
 
     Set<ConstraintViolation<BaseEntity>> actualViolations = validator.validate(actualEntity);
 

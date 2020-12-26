@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class BaseEntity {
 
-  @Json(message = "inputJson must be a JSON object")
+  @Json(message = "Input string must be a JSON object.")
   private String inputJson;
 
   public BaseEntity() {
