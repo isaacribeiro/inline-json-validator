@@ -17,9 +17,7 @@ public class JsonHelper {
     }
 
     try {
-      JsonParser parser = new ObjectMapper().getFactory().createParser(value);
-      while (parser.nextToken() != null) {
-      }
+      parseJson(value);
       return true;
     } catch (IOException e) {
       return false;
@@ -27,24 +25,40 @@ public class JsonHelper {
   }
 
   public static boolean containsAll(String json, Collection<String> properties) {
-    if (!isJson(json)) {
+    if (isEmpty(json)) {
       return false;
     }
 
     try {
-      JsonNode jsonNode = new ObjectMapper().readTree(json);
+      parseJson(json);
 
-      Iterator<String> iterator = properties.iterator();
-
-      while (iterator.hasNext()) {
-        JsonNode node = getJsonNode(jsonNode, iterator.next());
-        if (!elementHasBeenFound(node)) {
-          return false;
-        }
+      if (!hasAllProperties(json, properties)) {
+        return false;
       }
-    } catch (JsonProcessingException e) {
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
+  }
+
+  private static boolean hasAllProperties(String json, Collection<String> properties)
+      throws JsonProcessingException {
+    JsonNode jsonNode = new ObjectMapper().readTree(json);
+
+    Iterator<String> iterator = properties.iterator();
+    while (iterator.hasNext()) {
+      JsonNode node = getJsonNode(jsonNode, iterator.next());
+      if (!elementHasBeenFound(node)) {
+        return false;
+      }
     }
     return true;
+  }
+
+  private static void parseJson(String value) throws IOException {
+    JsonParser parser = new ObjectMapper().getFactory().createParser(value);
+    while (parser.nextToken() != null) {
+    }
   }
 
   private static boolean elementHasBeenFound(JsonNode node) {
