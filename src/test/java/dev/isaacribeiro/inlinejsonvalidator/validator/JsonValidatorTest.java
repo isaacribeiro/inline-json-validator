@@ -39,8 +39,26 @@ class JsonValidatorTest {
 
   @Test
   public void shouldReturnFalseWhenInputIsAValidJsonButMandatoryParametersAreNotPresent() {
+    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"inexistentKey"}));
+    assertFalse(cut.isValid("{\"key\": \"value\"}", null));
+  }
+
+  @Test
+  public void shouldReturnFalseWhenInputIsAValidJsonAndMandatoryParametersArePresent() {
     cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key"}));
-    assertTrue(cut.isValid("{\"key\": \"value\"}", null));
+    assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
+
+    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key", "key.subkey"}));
+    assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
+  }
+
+  @Test
+  public void shouldReturnTrueWhenInputIsAValidJsonAndMandatoryParametersArePresent() {
+    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key"}));
+    assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
+
+    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key", "key.subkey"}));
+    assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
   }
 
 }
