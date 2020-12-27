@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.BaseEntity;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -11,27 +15,31 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
-public class SimpleIntegrationTest {
+public class JsonValidationSteps {
 
   private static Validator validator;
+  private Set<ConstraintViolation<BaseEntity>> actualViolations;
 
-  @BeforeAll
+  @Before
   public static void classSetup() {
     validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
 
-  @Test
-  public void shouldRaiseAViolationWhenPropertyIsAnnotatedButItsValueIsNotAJsonObject() {
-    // Given & When
+  @Given("an empty string")
+  public void an_empty_string() {
+  }
+
+  @When("I create a new Base Entity instance")
+  public void i_create_a_new_base_entity_instance() {
+    BaseEntity actualEntity = new BaseEntity();
+    actualViolations = validator.validate(actualEntity);
+  }
+
+  @Then("a violation should be raised.")
+  public void a_violation_should_be_raised() {
     Set<String> expectedViolationMessagesD = new HashSet();
     expectedViolationMessagesD.add("Input string must be a JSON object.");
-
-    BaseEntity actualEntity = new BaseEntity();
-
-    Set<ConstraintViolation<BaseEntity>> actualViolations = validator.validate(actualEntity);
 
     assertEquals(1, actualViolations.size());
 
@@ -44,5 +52,4 @@ public class SimpleIntegrationTest {
       expectedViolationMessagesD.remove(violation.getMessage());
     }
   }
-
 }
