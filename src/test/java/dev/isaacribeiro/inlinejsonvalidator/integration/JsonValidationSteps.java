@@ -18,6 +18,7 @@ import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 
 public class JsonValidationSteps {
 
+  private BaseEntity baseEntity;
   private static Validator validator;
   private Set<ConstraintViolation<BaseEntity>> actualViolations;
 
@@ -26,22 +27,23 @@ public class JsonValidationSteps {
     validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
 
-  @Given("an empty string")
-  public void an_empty_string() {
+  @Given("a BaseEntity instance whose value is {string}")
+  public void a_base_entity_instance_whose_value_is(String inputValue) {
+    baseEntity = new BaseEntity();
+    baseEntity.setValue(inputValue);
   }
 
-  @When("I create a new Base Entity instance")
-  public void i_create_a_new_base_entity_instance() {
-    BaseEntity actualEntity = new BaseEntity();
-    actualViolations = validator.validate(actualEntity);
+  @When("it is validated")
+  public void it_is_validated() {
+    actualViolations = validator.validate(baseEntity);
   }
 
-  @Then("a violation should be raised.")
-  public void a_violation_should_be_raised() {
+  @Then("{int} violations should be raised.")
+  public void violations_should_be_raised(Integer expectedViolationNumber) {
     Set<String> expectedViolationMessagesD = new HashSet();
     expectedViolationMessagesD.add("Input string must be a JSON object.");
 
-    assertEquals(1, actualViolations.size());
+    assertEquals(expectedViolationNumber, actualViolations.size());
 
     Iterator<ConstraintViolation<BaseEntity>> actualViolationsIterator = actualViolations
         .iterator();
