@@ -24,6 +24,9 @@
     <developer>
       <name>Isaac Ribeiro</name>
       <email>ribeiro.isaac@hotmail.com</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
       <url>https://isaacribeiro.dev</url>
     </developer>
   </developers>
@@ -35,7 +38,18 @@
     <url>http://github.com/isaacribeiro/inline-json-validator/tree/master</url>
   </scm>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
+    <!-- Project -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- Dependencies -->
     <jakarta.validation.version>3.0.0</jakarta.validation.version>
     <hibernate.validator.version>7.0.0.Final</hibernate.validator.version>
     <jakarta.el.version>4.0.1</jakarta.el.version>
@@ -45,6 +59,10 @@
     <cucumber.version>6.9.1</cucumber.version>
     <maven.compiler.version>3.8.1</maven.compiler.version>
     <maven.checkstyle.version>3.1.1</maven.checkstyle.version>
+    <maven.javadoc.version>3.2.0</maven.javadoc.version>
+    <maven.source.version>3.2.1</maven.source.version>
+    <maven.gpg.version>1.6</maven.gpg.version>
+    <maven.nexus-staging.version>1.6.8</maven.nexus-staging.version>
     <jacoco.version>0.8.6</jacoco.version>
     <surefire.version>3.0.0-M5</surefire.version>
   </properties>
@@ -208,6 +226,77 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <!-- Source -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven.source.version}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Javadoc -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven.javadoc.version}</version>
+            <configuration>
+              <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- GPG Signer -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven.gpg.version}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Nexus Deployment -->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>${maven.nexus-staging.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <reporting>
     <plugins>

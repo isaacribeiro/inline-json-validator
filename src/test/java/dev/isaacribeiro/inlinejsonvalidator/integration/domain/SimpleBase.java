@@ -2,15 +2,15 @@ package dev.isaacribeiro.inlinejsonvalidator.integration.domain;
 
 import dev.isaacribeiro.inlinejsonvalidator.annotation.Json;
 
-public class BaseEntity {
+public class SimpleBase {
 
   @Json(message = "Input string must be a JSON object.")
   private String value;
 
-  public BaseEntity() {
+  public SimpleBase() {
   }
 
-  public BaseEntity(String value) {
+  public SimpleBase(String value) {
     this.value = value;
   }
 

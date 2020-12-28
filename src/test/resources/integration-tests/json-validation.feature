@@ -1,15 +1,13 @@
 Feature: Validate a JSON string
   Any attribute annotated with @JSON must be a valid JSON object.
 
-  Scenario: Empty string is not a valid JSON object.
-    Given a BaseEntity instance whose value is <inputValue>
-    And a list of <listOfMandatoryFields> to be checked
+  Scenario: A Base entity has a single attribute with the @Json annotation and there is no mandatory parameters.
+    Given a Base instance with a @Json-annotated value attribute equals to <inputValue>
     When it is validated
-    Then <expectedViolationNumber> violations should be raised.
+    Then <expectedViolationNumber> violations should be raised
 
     Examples:
-      |inputValue|listOfMandatoryFields|expectedViolationNumber|
-      |"abc"|a,b|1|
-      |""||1|
-      |"{}"||0|
-      |"{}"||0|
+      |inputValue|expectedViolationNumber|
+      |""|1|
+      |"\"key\": \"value\""|1|
+      |"{\"key\": \"value\"}"|0|
