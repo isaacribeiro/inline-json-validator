@@ -9,12 +9,13 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 
 public class JsonValidationSteps {
@@ -25,7 +26,10 @@ public class JsonValidationSteps {
 
   @Before
   public static void classSetup() {
-    validator = Validation.buildDefaultValidatorFactory().getValidator();
+    validator = Validation.byProvider(HibernateValidator.class)
+        .configure()
+        .buildValidatorFactory()
+        .getValidator();
   }
 
   @Given("a Base instance with a @Json-annotated value attribute equals to {string}")
