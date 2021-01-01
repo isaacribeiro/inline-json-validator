@@ -39,8 +39,12 @@ public class JsonHelper {
    * @param properties Collection of Strings with all parameters to be checked.
    */
   public static boolean containsAll(String json, Collection<String> properties) {
-    if (isEmpty(json)) {
+    if (!isJson(json)) {
       return false;
+    }
+
+    if (properties.isEmpty()) {
+      return true;
     }
 
     try {

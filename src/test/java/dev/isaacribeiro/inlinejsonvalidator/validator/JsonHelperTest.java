@@ -34,6 +34,8 @@ class JsonHelperTest {
 
   @Test
   public void shouldReturnTrueWhenJsonContainsAllRequiredProperty() {
+    assertTrue(JsonHelper.containsAll("{}", Collections.EMPTY_SET));
+    assertTrue(JsonHelper.containsAll("{\"key\": \"value\"}", Collections.EMPTY_LIST));
     assertTrue(JsonHelper.containsAll("{\"key\": \"value\"}", new HashSet<>(Arrays.asList("key"))));
     assertTrue(JsonHelper.containsAll("{\"key\": \"value\"}", Arrays.asList("key")));
     assertTrue(JsonHelper
@@ -51,8 +53,8 @@ class JsonHelperTest {
   }
 
   @Test
-  public void shouldReturnFalseWhenJsonIsInvalidDoesNotContainsAnyRequiredProperty() {
-    assertFalse(JsonHelper.containsAll(null, Collections.emptySet()));
+  public void shouldReturnFalseWhenJsonIsInvalidOrDoesNotContainsAnyRequiredProperty() {
+    assertFalse(JsonHelper.containsAll(null, Collections.EMPTY_SET));
     assertFalse(JsonHelper.containsAll("", Collections.emptyList()));
     assertFalse(JsonHelper.containsAll("\"key\": \"value\"", Collections.emptyList()));
     assertFalse(
