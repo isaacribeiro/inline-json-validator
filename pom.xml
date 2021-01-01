@@ -6,7 +6,7 @@
 
   <groupId>dev.isaacribeiro</groupId>
   <artifactId>inline-json-validator</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -50,9 +50,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Dependencies -->
-    <jakarta.validation.version>3.0.0</jakarta.validation.version>
+    <javax.validation.version>2.0.1.Final</javax.validation.version>
     <hibernate.validator.version>7.0.0.Final</hibernate.validator.version>
-    <jakarta.el.version>4.0.1</jakarta.el.version>
     <junit.version>5.7.0</junit.version>
     <jackson.version>2.12.0</jackson.version>
     <apache.commons.version>3.11</apache.commons.version>
@@ -68,11 +67,11 @@
   </properties>
 
   <dependencies>
-    <!-- Jakarta Bean Validation Reference -->
+    <!-- Javax Bean Validation -->
     <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-      <version>${jakarta.validation.version}</version>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>2.0.1.Final</version>
     </dependency>
 
     <!-- Jackson -->
@@ -94,14 +93,6 @@
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate.validator.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Jakarta Expression Language - Integration Tests -->
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>jakarta.el</artifactId>
-      <version>${jakarta.el.version}</version>
       <scope>test</scope>
     </dependency>
 

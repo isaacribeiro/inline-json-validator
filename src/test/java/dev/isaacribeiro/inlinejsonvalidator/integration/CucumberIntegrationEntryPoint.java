@@ -5,7 +5,7 @@ import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/integration-tests")
+@CucumberOptions(features = "src/test/resources/integration-tests", tags = "not @ignore")
 public class CucumberIntegrationEntryPoint {
 
 }
