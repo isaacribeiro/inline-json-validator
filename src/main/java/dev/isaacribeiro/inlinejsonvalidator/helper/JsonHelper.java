@@ -1,4 +1,4 @@
-package dev.isaacribeiro.inlinejsonvalidator.validator;
+package dev.isaacribeiro.inlinejsonvalidator.helper;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,46 +15,25 @@ import org.apache.commons.lang3.StringUtils;
 public class JsonHelper {
 
   /**
-   * Checks if a given string is a JSON object.
-   *
-   * @param value String to be validated.
-   */
-  public static boolean isJson(String value) {
-    if (isEmpty(value)) {
-      return false;
-    }
-
-    try {
-      parseJson(value);
-      return true;
-    } catch (IOException e) {
-      return false;
-    }
-  }
-
-  /**
    * Checks if a given JSON object contains all expected properties.
    *
-   * @param json source object to be validated.
+   * @param json       source object to be validated.
    * @param properties Collection of Strings with all parameters to be checked.
    */
-  public static boolean containsAll(String json, Collection<String> properties) {
-    if (!isJson(json)) {
+  public static boolean isValid(String json, Collection<String> properties) {
+    if (isEmpty(json)) {
       return false;
-    }
-
-    if (properties.isEmpty()) {
-      return true;
     }
 
     try {
       parseJson(json);
 
-      if (!hasAllProperties(json, properties)) {
-        return false;
+      if (properties.isEmpty()) {
+        return true;
       }
-      return true;
-    } catch (IOException e) {
+
+      return hasAllProperties(json, properties);
+    } catch (Exception e) {
       return false;
     }
   }
@@ -80,7 +59,7 @@ public class JsonHelper {
   }
 
   private static boolean elementHasBeenFound(JsonNode node) {
-    return !(node.isEmpty() && node.size() == 0 && node.asText().equals(""));
+    return !node.isMissingNode();
   }
 
   private static boolean isEmpty(String value) {

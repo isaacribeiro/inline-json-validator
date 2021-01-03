@@ -1,6 +1,7 @@
 package dev.isaacribeiro.inlinejsonvalidator.validator;
 
 import dev.isaacribeiro.inlinejsonvalidator.annotation.Json;
+import dev.isaacribeiro.inlinejsonvalidator.helper.JsonHelper;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,10 +27,6 @@ public class JsonValidator implements ConstraintValidator<Json, String> {
    * @param constraintValidatorContext Validation context.
    */
   public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-    if (!JsonHelper.isJson(value)) {
-      return false;
-    }
-
-    return JsonHelper.containsAll(value, this.mandatoryFields);
+    return JsonHelper.isValid(value, this.mandatoryFields);
   }
 }
