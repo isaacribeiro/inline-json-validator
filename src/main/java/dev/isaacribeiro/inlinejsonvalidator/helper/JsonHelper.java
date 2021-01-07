@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +40,27 @@ public class JsonHelper {
     }
   }
 
+  /**
+   * TBD.
+   *
+   * @param json     input JSON object.
+   * @param property property to be validate.
+   * @param type     expected property type.
+   * @return
+   */
+  public static boolean hasProperty(String json, String property, JsonNodeType type) {
+    try {
+      return isValid(json, Arrays.asList(property)) && doesPropertyMatchType(json, property, type);
+    } catch (JsonProcessingException e) {
+      return false;
+    }
+  }
+
+  private static boolean doesPropertyMatchType(String json, String property, JsonNodeType type)
+      throws JsonProcessingException {
+    return hasPropertyOf(json, property, type);
+  }
+
   private static boolean hasAllProperties(String json, Collection<String> properties)
       throws JsonProcessingException {
     JsonNode jsonNode = new ObjectMapper().readTree(json);
@@ -52,6 +75,13 @@ public class JsonHelper {
     return true;
   }
 
+  private static boolean hasPropertyOf(String inputJson, String property, JsonNodeType type)
+      throws JsonProcessingException {
+    JsonNode json = new ObjectMapper().readTree(inputJson);
+    JsonNode node = getJsonNode(json, property);
+    return isPropertyOfType(node, type);
+  }
+
   private static void parseJson(String value) throws IOException {
     JsonParser parser = new ObjectMapper().getFactory().createParser(value);
     while (parser.nextToken() != null) {
@@ -60,6 +90,10 @@ public class JsonHelper {
 
   private static boolean elementHasBeenFound(JsonNode node) {
     return !node.isMissingNode();
+  }
+
+  private static boolean isPropertyOfType(JsonNode node, JsonNodeType type) {
+    return elementHasBeenFound(node) && node.getNodeType().equals(type);
   }
 
   private static boolean isEmpty(String value) {

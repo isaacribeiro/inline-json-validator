@@ -7,15 +7,4 @@ public class SimpleJson extends Base {
   @Json(message = "Input string must be a JSON object.")
   private String value;
 
-  public SimpleJson() {
-  }
-
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
-  }
-
 }

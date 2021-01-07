@@ -4,13 +4,6 @@ public class Base {
 
   private String value;
 
-  public Base() {
-  }
-
-  public Base(String value) {
-    this.value = value;
-  }
-
   public String getValue() {
     return value;
   }

@@ -12,14 +12,14 @@ class JsonValidatorTest {
 
   @Test
   public void shouldReturnFalseWhenInputIsEmptyOrNull() {
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{}));
     assertFalse(cut.isValid("", null));
     assertFalse(cut.isValid(null, null));
   }
 
   @Test
   public void shouldReturnFalseWhenInputIsNotAValidJsonObject() {
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{}));
     assertFalse(cut.isValid("token", null));
     assertFalse(cut.isValid("token{}", null));
     assertFalse(cut.isValid("{}token", null));
@@ -31,7 +31,7 @@ class JsonValidatorTest {
 
   @Test
   public void shouldReturnTrueWhenInputIsAValidJsonAndThereAreNoMandatoryParameters() {
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{}));
     assertTrue(cut.isValid("{\"key\": \"value\"}", null));
     assertTrue(cut.isValid("{\"keyA\": \"valueA\",\"keyB\": {\"subkeyB\": \"subvalueB\"}}", null));
     assertTrue(cut.isValid("{\"keyA\": \"valueA\",\"keyB\": [\"arrayA\"]}", null));
@@ -39,25 +39,25 @@ class JsonValidatorTest {
 
   @Test
   public void shouldReturnFalseWhenInputIsAValidJsonButMandatoryParametersAreNotPresent() {
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"inexistentKey"}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{"inexistentKey"}));
     assertFalse(cut.isValid("{\"key\": \"value\"}", null));
   }
 
   @Test
   public void shouldReturnFalseWhenInputIsAValidJsonAndMandatoryParametersArePresent() {
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key"}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{"key"}));
     assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
 
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key", "key.subkey"}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{"key", "key.subkey"}));
     assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
   }
 
   @Test
   public void shouldReturnTrueWhenInputIsAValidJsonAndMandatoryParametersArePresent() {
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key"}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{"key"}));
     assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
 
-    cut.initialize(AnnotationHelper.createAnnotation(new String[]{"key", "key.subkey"}));
+    cut.initialize(AnnotationHelper.createJsonAnnotation(new String[]{"key", "key.subkey"}));
     assertTrue(cut.isValid("{\"key\": {\"subkey\": \"value\"}}", null));
   }
 
