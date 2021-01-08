@@ -8,6 +8,7 @@ import dev.isaacribeiro.inlinejsonvalidator.integration.domain.MultipleMandatory
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SimpleJson;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleArrayField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleBooleanField;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleFieldWithCustomValidator;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleMandatoryParameter;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleNumericField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleObjectField;
@@ -16,7 +17,6 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.util.HashSet;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -98,6 +98,12 @@ public class IntegrationTestSteps {
     baseEntity.setValue(inputValue);
   }
 
+  @Given("a Base instance with a @Property-annotated value attribute equals to {string} has its own validator")
+  public void a_base_instance_with_a_property_annotated_value_attribute_equals_to_has_its_own_validator(
+      String inputValue) {
+    baseEntity = new SingleFieldWithCustomValidator();
+    baseEntity.setValue(inputValue);
+  }
 
   @When("it is validated")
   public void it_is_validated() {

@@ -1,6 +1,7 @@
 package dev.isaacribeiro.inlinejsonvalidator.annotation;
 
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import dev.isaacribeiro.inlinejsonvalidator.custom.CustomPropertyValidator;
 import dev.isaacribeiro.inlinejsonvalidator.validator.PropertyValidator;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,6 +33,13 @@ public @interface Property {
    * Message.
    */
   String message() default "";
+
+  /**
+   * TDB.
+   *
+   * @return
+   */
+  Class<? extends CustomPropertyValidator>[] customValidator() default {};
 
   /**
    * JSR-303 based parameter.

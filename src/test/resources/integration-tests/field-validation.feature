@@ -116,3 +116,14 @@ Feature: Validate a specific JSON parameter
           |"{\"objectProperty\": [ \"valueA\", \"valueB\", 1, false ]}"|1|
           |"{\"objectProperty\": [ \"valueA\", \"valueB\", 1, false, { \"subKey\": \"subValue\"} ]}"|1|
           |"{\"objectProperty\": { \"subKey\": \"subValue\"}}"|0|
+
+  # Scenario F: Checks if a given JSON string complies with a Custom validator.
+      Scenario: A Base entity has a single @Property-annotated customProperty attribute that has its own validator.
+        Given a Base instance with a @Property-annotated value attribute equals to <inputValue> has its own validator
+        When it is validated
+        Then <expectedViolationNumber> violations should be raised
+
+        Examples:
+          |inputValue|expectedViolationNumber|
+          |"{\"customProperty\": \"UNEXPECTED_VALUE\"}"|1|
+          |"{\"customProperty\": \"EXPECTED_VALUE\"}"|0|

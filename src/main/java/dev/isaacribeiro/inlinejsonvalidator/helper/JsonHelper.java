@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import dev.isaacribeiro.inlinejsonvalidator.custom.CustomPropertyValidator;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +57,36 @@ public class JsonHelper {
     }
   }
 
+  /**
+   * Custom property.
+   *
+   * @param json       input source string.
+   * @param validators custom validators array.
+   * @return
+   */
+  public static boolean matches(String json, String property, JsonNodeType type,
+      Class<? extends CustomPropertyValidator>[] validators) {
+    if (!hasProperty(json, property, type)) {
+      return false;
+    }
+
+    try {
+      JsonNode nodeValue = getJsonNodeAt(json, property);
+      CustomPropertyValidator[] instances = new CustomPropertyValidator[validators.length];
+      for (int i = 0; i < validators.length; i++) {
+        instances[i] = validators[i].getDeclaredConstructor().newInstance();
+      }
+      return (boolean) validators[0].getDeclaredMethod("isValid", JsonNode.class)
+          .invoke(instances[0], nodeValue);
+    } catch (NoSuchMethodException
+        | InstantiationException
+        | IllegalAccessException
+        | InvocationTargetException
+        | JsonProcessingException e) {
+      return false;
+    }
+  }
+
   private static boolean doesPropertyMatchType(String json, String property, JsonNodeType type)
       throws JsonProcessingException {
     return hasPropertyOf(json, property, type);
@@ -76,9 +108,14 @@ public class JsonHelper {
 
   private static boolean hasPropertyOf(String inputJson, String property, JsonNodeType type)
       throws JsonProcessingException {
-    JsonNode json = new ObjectMapper().readTree(inputJson);
-    JsonNode node = getJsonNode(json, property);
+    JsonNode node = getJsonNodeAt(inputJson, property);
     return isPropertyOfType(node, type);
+  }
+
+  private static JsonNode getJsonNodeAt(String inputJson, String property)
+      throws JsonProcessingException {
+    JsonNode json = new ObjectMapper().readTree(inputJson);
+    return getJsonNode(json, property);
   }
 
   private static void parseJson(String value) throws IOException {
