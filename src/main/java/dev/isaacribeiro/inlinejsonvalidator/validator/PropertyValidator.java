@@ -10,6 +10,7 @@ public class PropertyValidator implements ConstraintValidator<Property, String> 
 
   private String name;
   private JsonNodeType type;
+  private boolean allowEmpty;
 
   @Override
   public void initialize(Property constraintAnnotation) {

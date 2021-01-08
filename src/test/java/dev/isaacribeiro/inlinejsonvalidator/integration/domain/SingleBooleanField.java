@@ -3,9 +3,9 @@ package dev.isaacribeiro.inlinejsonvalidator.integration.domain;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import dev.isaacribeiro.inlinejsonvalidator.annotation.Property;
 
-public class SingleStringField extends Base {
+public class SingleBooleanField extends Base {
 
-  @Property(name = "stringProperty", type = JsonNodeType.STRING, message = "JSON must contain 'stringProperty' of type String.")
+  @Property(name = "booleanProperty", type = JsonNodeType.BOOLEAN, message = "JSON must contain 'booleanProperty' of type Boolean.")
   private String value;
 
   @Override

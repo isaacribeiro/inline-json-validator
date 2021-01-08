@@ -3,9 +3,9 @@ package dev.isaacribeiro.inlinejsonvalidator.integration.domain;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import dev.isaacribeiro.inlinejsonvalidator.annotation.Property;
 
-public class SingleStringField extends Base {
+public class SingleArrayField extends Base {
 
-  @Property(name = "stringProperty", type = JsonNodeType.STRING, message = "JSON must contain 'stringProperty' of type String.")
+  @Property(name = "arrayProperty", type = JsonNodeType.ARRAY, message = "JSON must contain 'arrayProperty' of type Array.")
   private String value;
 
   @Override

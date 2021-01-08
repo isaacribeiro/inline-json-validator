@@ -6,7 +6,11 @@ import dev.isaacribeiro.inlinejsonvalidator.integration.domain.Base;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.MultipleMandatoryParameter;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.MultipleMandatoryParameterWithSubNodes;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SimpleJson;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleArrayField;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleBooleanField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleMandatoryParameter;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleNumericField;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleObjectField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleStringField;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -66,6 +70,35 @@ public class IntegrationTestSteps {
     baseEntity.setValue(inputValue);
   }
 
+  @Given("a Base instance with a Numeric @Property-annotated value attribute equals to {string}")
+  public void a_base_instance_with_a_numeric_property_annotated_value_attribute_equals_to(
+      String inputValue) {
+    baseEntity = new SingleNumericField();
+    baseEntity.setValue(inputValue);
+  }
+
+  @Given("a Base instance with a Boolean @Property-annotated value attribute equals to {string}")
+  public void a_base_instance_with_a_boolen_property_annotated_value_attribute_equals_to(
+      String inputValue) {
+    baseEntity = new SingleBooleanField();
+    baseEntity.setValue(inputValue);
+  }
+
+  @Given("a Base instance with an Array @Property-annotated value attribute equals to {string}")
+  public void a_base_instance_with_an_array_property_annotated_value_attribute_equals_to(
+      String inputValue) {
+    baseEntity = new SingleArrayField();
+    baseEntity.setValue(inputValue);
+  }
+
+  @Given("a Base instance with an object @Property-annotated value attribute equals to {string}")
+  public void a_base_instance_with_an_object_property_annotated_value_attribute_equals_to(
+      String inputValue) {
+    baseEntity = new SingleObjectField();
+    baseEntity.setValue(inputValue);
+  }
+
+
   @When("it is validated")
   public void it_is_validated() {
     actualViolations = validator.validate(baseEntity);
@@ -73,16 +106,6 @@ public class IntegrationTestSteps {
 
   @Then("{int} violations should be raised")
   public void violations_should_be_raised(Integer expectedViolationNumber) {
-    Set<String> expectedViolationMessagesD = new HashSet();
-    expectedViolationMessagesD.add("Input string must be a JSON object.");
-
     assertEquals(expectedViolationNumber, actualViolations.size());
-
-//    Iterator<ConstraintViolation<Base>> actualViolationsIterator = actualViolations.iterator();
-//    while (actualViolationsIterator.hasNext()) {
-//      ConstraintViolation<? extends Base> violation = actualViolationsIterator.next();
-//      assertTrue(expectedViolationMessagesD.contains(violation.getMessage()));
-//      expectedViolationMessagesD.remove(violation.getMessage());
-//    }
   }
 }

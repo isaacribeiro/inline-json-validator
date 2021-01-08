@@ -7,4 +7,9 @@ public class SimpleJson extends Base {
   @Json(message = "Input string must be a JSON object.")
   private String value;
 
+  @Override
+  public void setValue(String value) {
+    this.value = value;
+  }
+
 }
