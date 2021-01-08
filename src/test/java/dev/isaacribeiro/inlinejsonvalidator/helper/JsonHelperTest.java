@@ -36,7 +36,6 @@ class JsonHelperTest {
     assertFalse(JsonHelper.isValid(null, Collections.EMPTY_SET));
     assertFalse(JsonHelper.isValid("", Collections.emptyList()));
     assertFalse(JsonHelper.isValid("\"key\": \"value\"", Collections.EMPTY_LIST));
-//    assertFalse(JsonHelper.isValid("\"key\" \"value\"", Collections.EMPTY_SET));
     assertFalse(
         JsonHelper.isValid("{\"key\": \"value\"}", new HashSet<>(Arrays.asList("wrongKey"))));
     assertFalse(JsonHelper.isValid("{\"key\": \"value\"}", Arrays.asList("wrongKey")));
@@ -87,4 +86,40 @@ class JsonHelperTest {
         .hasProperty("{\"key\": { \"subkey\": true }}", "key.subkey", JsonNodeType.BOOLEAN));
   }
 
+  @Test
+  public void shouldReturnFalseWhenJsonIsInvalidOrJsonDoesNotContainExpectedPropertyOrExpectedPropertyTypeDoesNotMatch() {
+    assertFalse(JsonHelper.hasProperty("", "key", JsonNodeType.STRING));
+    assertFalse(JsonHelper.hasProperty("{\"key\"}", "key", JsonNodeType.STRING));
+    assertFalse(JsonHelper.hasProperty("{\"key\": \"value\"}", "wrongKey", JsonNodeType.NUMBER));
+    assertFalse(JsonHelper.hasProperty("{\"key\": { \"subKey\": \"value\"}", "key.wrongSubKey", JsonNodeType.STRING));
+    assertFalse(JsonHelper.hasProperty("{\"key\": { \"subKey\": { \"deepKey\": \"value\"}", "key.subKey.wrongDeepKey", JsonNodeType.STRING));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": \"value\"}}", "key.subkey", JsonNodeType.OBJECT));
+    assertFalse(
+        JsonHelper.hasProperty("{\"key\": { \"subkey\": 1.0}}", "key.subkey", JsonNodeType.STRING));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": 1.0}}}", "key.subkey.deepkey",
+            JsonNodeType.STRING));
+    assertFalse(JsonHelper.hasProperty("{\"key\": { \"subkey\": { \"deepkey\": 1.0}}}", "key.subkey",
+        JsonNodeType.ARRAY));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": 1.0}}}", "key", JsonNodeType.STRING));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": [ 1.0 ]}}}", "key.subkey.deepkey",
+            JsonNodeType.BOOLEAN));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": [ 1.0, 1.1 ]}}}", "key.subkey.deepkey",
+            JsonNodeType.NUMBER));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": [ 1.0, 1,1, \"thirdValue\" ]}}}",
+            "key.subkey.deepkey", JsonNodeType.STRING));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": false }}}", "key.subkey.deepkey",
+            JsonNodeType.OBJECT));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": { \"deepkey\": true }}}", "key.subkey.deepkey",
+            JsonNodeType.STRING));
+    assertFalse(JsonHelper
+        .hasProperty("{\"key\": { \"subkey\": true }}", "key.subkey", JsonNodeType.ARRAY));
+  }
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +40,7 @@ public class JsonHelper {
   }
 
   /**
-   * TBD.
+   * Checks if a given inline-JSON String contains a specific parameter.
    *
    * @param json     input JSON object.
    * @param property property to be validate.
@@ -50,7 +49,7 @@ public class JsonHelper {
    */
   public static boolean hasProperty(String json, String property, JsonNodeType type) {
     try {
-      return isValid(json, Arrays.asList(property)) && doesPropertyMatchType(json, property, type);
+      return doesPropertyMatchType(json, property, type);
     } catch (JsonProcessingException e) {
       return false;
     }
