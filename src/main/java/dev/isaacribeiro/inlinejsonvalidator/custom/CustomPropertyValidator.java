@@ -4,6 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface CustomPropertyValidator {
 
-  boolean isValid(JsonNode value);
+  boolean isValid(JsonNode value) throws Exception;
 
 }

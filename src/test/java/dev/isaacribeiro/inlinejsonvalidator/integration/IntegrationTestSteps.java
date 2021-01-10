@@ -3,12 +3,14 @@ package dev.isaacribeiro.inlinejsonvalidator.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.Base;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.ErrorHandlerWithCustomValidator;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.MultipleMandatoryParameter;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.MultipleMandatoryParameterWithSubNodes;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SimpleJson;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleArrayField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleBooleanField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleFieldWithCustomValidator;
+import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleFieldWithMultipleValidators;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleMandatoryParameter;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleNumericField;
 import dev.isaacribeiro.inlinejsonvalidator.integration.domain.SingleObjectField;
@@ -102,6 +104,20 @@ public class IntegrationTestSteps {
   public void a_base_instance_with_a_property_annotated_value_attribute_equals_to_has_its_own_validator(
       String inputValue) {
     baseEntity = new SingleFieldWithCustomValidator();
+    baseEntity.setValue(inputValue);
+  }
+
+  @Given("a Base instance with a value attribute equals to {string} has its own validator that throws an Exception.")
+  public void a_base_instance_with_a_value_attribute_equals_to_has_its_own_validator_that_throws_an_exception(
+      String inputValue) {
+    baseEntity = new ErrorHandlerWithCustomValidator();
+    baseEntity.setValue(inputValue);
+  }
+
+  @Given("a Base instance with a value attribute equals to {string} that is assigned to two different custom Validators")
+  public void a_base_instance_with_a_value_attribute_equals_to_that_is_assigned_to_two_different_custom_validators(
+      String inputValue) {
+    baseEntity = new SingleFieldWithMultipleValidators();
     baseEntity.setValue(inputValue);
   }
 

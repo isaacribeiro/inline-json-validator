@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import dev.isaacribeiro.inlinejsonvalidator.custom.CustomPropertyValidator;
 import dev.isaacribeiro.inlinejsonvalidator.validator.PropertyValidator;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -13,6 +14,7 @@ import javax.validation.Payload;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PropertyValidator.class)
+@Repeatable(Properties.class)
 public @interface Property {
 
   /**

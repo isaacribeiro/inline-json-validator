@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import dev.isaacribeiro.inlinejsonvalidator.custom.CustomPropertyValidator;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import org.apache.commons.lang3.StringUtils;
@@ -18,27 +17,42 @@ import org.apache.commons.lang3.StringUtils;
 public class JsonHelper {
 
   /**
-   * Checks if a given JSON object contains all expected properties.
+   * TBD.
    *
-   * @param json       source object to be validated.
-   * @param properties Collection of Strings with all parameters to be checked.
+   * @param json Input String.
+   * @return
    */
-  public static boolean isValid(String json, Collection<String> properties) {
+  public static boolean isJson(String json) {
     if (isEmpty(json)) {
       return false;
     }
 
     try {
-      parseJson(json);
-
-      if (properties.isEmpty()) {
-        return true;
+      JsonParser parser = new ObjectMapper().getFactory().createParser(json);
+      while (parser.nextToken() != null) {
       }
-
-      return hasAllProperties(json, properties);
-    } catch (Exception e) {
+      return true;
+    } catch (IOException e) {
       return false;
     }
+  }
+
+  /**
+   * TDB.
+   *
+   * @param json       input JSON String
+   * @param properties Collection of properties to be checked.
+   * @return
+   */
+  public static boolean containsAll(String json, Collection<String> properties) {
+    Iterator<String> iterator = properties.iterator();
+    while (iterator.hasNext()) {
+      JsonNode node = getNodeAt(json, iterator.next());
+      if (node.isMissingNode()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -50,11 +64,11 @@ public class JsonHelper {
    * @return
    */
   public static boolean hasProperty(String json, String property, JsonNodeType type) {
-    try {
-      return doesPropertyMatchType(json, property, type);
-    } catch (JsonProcessingException e) {
+    JsonNode node = getNodeAt(json, property);
+    if (node == null) {
       return false;
     }
+    return !node.isMissingNode() && node.getNodeType().equals(type);
   }
 
   /**
@@ -71,76 +85,41 @@ public class JsonHelper {
     }
 
     try {
-      JsonNode nodeValue = getJsonNodeAt(json, property);
+      JsonNode nodeValue = getNodeAt(json, property);
       CustomPropertyValidator[] instances = new CustomPropertyValidator[validators.length];
       for (int i = 0; i < validators.length; i++) {
         instances[i] = validators[i].getDeclaredConstructor().newInstance();
       }
       return (boolean) validators[0].getDeclaredMethod("isValid", JsonNode.class)
           .invoke(instances[0], nodeValue);
-    } catch (NoSuchMethodException
-        | InstantiationException
-        | IllegalAccessException
-        | InvocationTargetException
-        | JsonProcessingException e) {
+    } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
   }
 
-  private static boolean doesPropertyMatchType(String json, String property, JsonNodeType type)
-      throws JsonProcessingException {
-    return hasPropertyOf(json, property, type);
-  }
-
-  private static boolean hasAllProperties(String json, Collection<String> properties)
-      throws JsonProcessingException {
-    JsonNode jsonNode = new ObjectMapper().readTree(json);
-
-    Iterator<String> iterator = properties.iterator();
-    while (iterator.hasNext()) {
-      JsonNode node = getJsonNode(jsonNode, iterator.next());
-      if (!elementHasBeenFound(node)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private static boolean hasPropertyOf(String inputJson, String property, JsonNodeType type)
-      throws JsonProcessingException {
-    JsonNode node = getJsonNodeAt(inputJson, property);
-    return isPropertyOfType(node, type);
-  }
-
-  private static JsonNode getJsonNodeAt(String inputJson, String property)
-      throws JsonProcessingException {
-    JsonNode json = new ObjectMapper().readTree(inputJson);
-    return getJsonNode(json, property);
-  }
-
-  private static void parseJson(String value) throws IOException {
-    JsonParser parser = new ObjectMapper().getFactory().createParser(value);
-    while (parser.nextToken() != null) {
+  private static JsonNode getJsonTree(String json) {
+    try {
+      return new ObjectMapper().readTree(json);
+    } catch (JsonProcessingException | NullPointerException e) {
+      return null;
     }
   }
 
-  private static boolean elementHasBeenFound(JsonNode node) {
-    return !node.isMissingNode();
-  }
+  private static JsonNode getNodeAt(String inputJson, String property) {
+    JsonNode jsonTree = getJsonTree(inputJson);
 
-  private static boolean isPropertyOfType(JsonNode node, JsonNodeType type) {
-    return elementHasBeenFound(node) && node.getNodeType().equals(type);
+    if (jsonTree != null) {
+      return jsonTree.at(translatePath(property));
+    }
+    return null;
   }
 
   private static boolean isEmpty(String value) {
     return StringUtils.isEmpty(value);
   }
 
-  private static JsonNode getJsonNode(JsonNode jsonNode, String mandatoryField) {
-    return jsonNode.at(parseJsonPath(mandatoryField));
-  }
-
-  private static String parseJsonPath(String mandatoryField) {
+  private static String translatePath(String mandatoryField) {
     return String.format("/%s", mandatoryField.replace('.', '/'));
   }
 }

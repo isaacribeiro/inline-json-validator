@@ -23,10 +23,10 @@ public class JsonValidator implements ConstraintValidator<Json, String> {
   /**
    * Validates a @Json annotated property.
    *
-   * @param value                      @Json annotated String attribute.
+   * @param inputValue                 @Json annotated String attribute.
    * @param constraintValidatorContext Validation context.
    */
-  public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-    return JsonHelper.isValid(value, this.mandatoryFields);
+  public boolean isValid(String inputValue, ConstraintValidatorContext constraintValidatorContext) {
+    return JsonHelper.isJson(inputValue) && JsonHelper.containsAll(inputValue, mandatoryFields);
   }
 }

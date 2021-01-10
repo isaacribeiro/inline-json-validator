@@ -125,5 +125,37 @@ Feature: Validate a specific JSON parameter
 
         Examples:
           |inputValue|expectedViolationNumber|
+          |""|1|
+          |"{}"|1|
+          |"\"customProperty\": \"EXPECTED_VALUE\""|1|
           |"{\"customProperty\": \"UNEXPECTED_VALUE\"}"|1|
+          |"{\"inexistentProperty\": \"EXPECTED_VALUE\"}"|1|
           |"{\"customProperty\": \"EXPECTED_VALUE\"}"|0|
+
+  # Scenario G: Checks if a given JSON string complies with a Custom validator.
+      Scenario: A Base entity has a single value attribute that has its own validator that throws an Exception.
+        Given a Base instance with a value attribute equals to <inputValue> has its own validator that throws an Exception.
+        When it is validated
+        Then <expectedViolationNumber> violations should be raised
+
+        Examples:
+          |inputValue|expectedViolationNumber|
+          |""|1|
+          |"{}"|1|
+          |"\"property\": \"EXPECTED_VALUE\""|1|
+          |"{\"property\": \"EXPECTED_VALUE\"}"|1|
+
+  # Scenario H: Checks if a given JSON string complies with multiple Custom validators.
+      Scenario: A Base entity has a single value attribute that is assigned to multiple validators.
+        Given a Base instance with a value attribute equals to <inputValue> that is assigned to two different custom Validators
+        When it is validated
+        Then <expectedViolationNumber> violations should be raised
+
+        Examples:
+          |inputValue|expectedViolationNumber|
+          |"{\"customProperty\": \"UNEXPECTED_VALUE\"}"|2|
+          |"{\"customProperty\": \"EXPECTED_VALUE\"}"|2|
+          |"{\"propertyA\": \"EXPECTED_VALUE_A\"}"|1|
+          |"{\"propertyB\": \"EXPECTED_VALUE_B\"}"|1|
+          |"{\"propertyA\": \"EXPECTED_VALUE_A\", \"propertyB\": \"EXPECTED_VALUE_A\"}"|1|
+          |"{\"propertyA\": \"EXPECTED_VALUE_A\", \"propertyB\": \"EXPECTED_VALUE_B\"}"|0|
