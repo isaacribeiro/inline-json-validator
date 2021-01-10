@@ -9,6 +9,7 @@ import dev.isaacribeiro.inlinejsonvalidator.custom.CustomPropertyValidator;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -67,20 +68,23 @@ public class JsonHelper {
     if (!hasProperty(json, property, type)) {
       return false;
     }
-    return (validators != null && validators.length > 0) ? callCustomValidator(json, property,
-        validators) : true;
+    return (ArrayUtils.isNotEmpty(validators)) ? callCustomValidator(json, property, validators)
+        : true;
   }
 
   private static boolean callCustomValidator(String json, String property,
       Class<? extends CustomPropertyValidator>[] validators) {
     try {
       JsonNode nodeValue = getNodeAt(json, property);
-      CustomPropertyValidator[] instances = new CustomPropertyValidator[validators.length];
       for (int i = 0; i < validators.length; i++) {
-        instances[i] = validators[i].getDeclaredConstructor().newInstance();
+        CustomPropertyValidator instance = validators[i].getDeclaredConstructor().newInstance();
+        boolean isValid = (boolean) validators[i].getDeclaredMethod("isValid", JsonNode.class)
+            .invoke(instance, nodeValue);
+        if (!isValid) {
+          return false;
+        }
       }
-      return (boolean) validators[0].getDeclaredMethod("isValid", JsonNode.class)
-          .invoke(instances[0], nodeValue);
+      return true;
     } catch (Exception e) {
       e.printStackTrace();
       return false;

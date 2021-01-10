@@ -155,7 +155,7 @@ Feature: Validate a specific JSON parameter
           |inputValue|expectedViolationNumber|
           |"{\"customProperty\": \"UNEXPECTED_VALUE\"}"|2|
           |"{\"customProperty\": \"EXPECTED_VALUE\"}"|2|
-          |"{\"propertyA\": \"EXPECTED_VALUE_A\"}"|1|
+          |"{\"propertyA\": \"EXPECTED_VALUE_A1\"}"|2|
           |"{\"propertyB\": \"EXPECTED_VALUE_B\"}"|1|
-          |"{\"propertyA\": \"EXPECTED_VALUE_A\", \"propertyB\": \"EXPECTED_VALUE_A\"}"|1|
-          |"{\"propertyA\": \"EXPECTED_VALUE_A\", \"propertyB\": \"EXPECTED_VALUE_B\"}"|0|
+          |"{\"propertyA\": \"EXPECTED_VALUE_A\", \"propertyB\": \"EXPECTED_VALUE_A\"}"|2|
+          |"{\"propertyA\": \"EXPECTED_VALUE_A1___EXPECTED_VALUE_A2\", \"propertyB\": \"EXPECTED_VALUE_B\"}"|0|
