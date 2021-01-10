@@ -56,22 +56,6 @@ public class JsonHelper {
   }
 
   /**
-   * Checks if a given inline-JSON String contains a specific parameter.
-   *
-   * @param json     input JSON object.
-   * @param property property to be validate.
-   * @param type     expected property type.
-   * @return
-   */
-  public static boolean hasProperty(String json, String property, JsonNodeType type) {
-    JsonNode node = getNodeAt(json, property);
-    if (node == null) {
-      return false;
-    }
-    return !node.isMissingNode() && node.getNodeType().equals(type);
-  }
-
-  /**
    * Custom property.
    *
    * @param json       input source string.
@@ -83,7 +67,12 @@ public class JsonHelper {
     if (!hasProperty(json, property, type)) {
       return false;
     }
+    return (validators != null && validators.length > 0) ? callCustomValidator(json, property,
+        validators) : true;
+  }
 
+  private static boolean callCustomValidator(String json, String property,
+      Class<? extends CustomPropertyValidator>[] validators) {
     try {
       JsonNode nodeValue = getNodeAt(json, property);
       CustomPropertyValidator[] instances = new CustomPropertyValidator[validators.length];
@@ -113,6 +102,14 @@ public class JsonHelper {
       return jsonTree.at(translatePath(property));
     }
     return null;
+  }
+
+  private static boolean hasProperty(String json, String property, JsonNodeType type) {
+    JsonNode node = getNodeAt(json, property);
+    if (node == null) {
+      return false;
+    }
+    return !node.isMissingNode() && node.getNodeType().equals(type);
   }
 
   private static boolean isEmpty(String value) {

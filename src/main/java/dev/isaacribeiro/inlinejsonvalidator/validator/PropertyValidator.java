@@ -22,9 +22,6 @@ public class PropertyValidator implements ConstraintValidator<Property, String> 
 
   @Override
   public boolean isValid(String json, ConstraintValidatorContext context) {
-    if (customValidator.length > 0) {
-      return JsonHelper.matches(json, name, type, customValidator);
-    }
-    return JsonHelper.hasProperty(json, name, type);
+    return JsonHelper.matches(json, name, type, customValidator);
   }
 }
